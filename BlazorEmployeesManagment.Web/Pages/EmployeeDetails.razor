@@ -1,0 +1,31 @@
+﻿@page "/EmployeeDetails/{id}"
+@inject BlazorEmployeesManagment.Web.Services.EmployeesServices employeesService
+
+@if (employee == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+
+
+    <img height="400" class="card-img-top imageThumbnail" src="@employee.PhotoPath" />
+    <h1> @employee.FirstName @employee.LastName</h1>
+    <h4> @employee.Email</h4>
+    <h4> @(employee.Department == null ? "No Department Inrolled" : employee.Department.DepartmentName)</h4>
+}
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private BlazorEmployeesManagment.Web.Models.Employee employee { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await employeesService.GetById(int.Parse(Id));
+    }
+
+
+}
