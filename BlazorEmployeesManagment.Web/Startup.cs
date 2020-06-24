@@ -42,6 +42,8 @@ namespace BlazorEmployeesManagment.Web
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<EmployeesServices>();
+            services.AddScoped<DepartmentsService>();
+
 
         }
 

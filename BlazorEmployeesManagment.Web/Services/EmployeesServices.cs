@@ -51,6 +51,9 @@ namespace BlazorEmployeesManagment.Web.Services
             oldEmployee.DepartmentId = employee.DepartmentId;
             oldEmployee.PhotoPath = employee.PhotoPath;
 
+            await db.SaveChangesAsync();
+
+
         }
     }
 }
