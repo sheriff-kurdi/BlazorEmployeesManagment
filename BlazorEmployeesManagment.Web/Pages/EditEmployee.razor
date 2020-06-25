@@ -9,7 +9,11 @@
 else
 {
 
-    <EditForm Model="@Employee">
+    <EditForm Model="@EditEmployeeModel" OnValidSubmit=@HandleValidSubmit>
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
         <h3>Edit Employee</h3>
         <hr />
 
@@ -19,7 +23,8 @@ else
             </label>
             <div class="col-sm-10">
                 <InputText id="firstName" class="form-control" placeholder="First Name"
-                           @bind-Value="Employee.FirstName" />
+                           @bind-Value="EditEmployeeModel.FirstName" />
+                <ValidationMessage For="@(()=> Employee.FirstName)" />
             </div>
         </div>
 
@@ -29,7 +34,7 @@ else
             </label>
             <div class="col-sm-10">
                 <InputText id="lastName" class="form-control" placeholder="Last Name"
-                           @bind-Value="Employee.LastName" />
+                           @bind-Value="EditEmployeeModel.LastName" />
             </div>
         </div>
 
@@ -39,7 +44,17 @@ else
             </label>
             <div class="col-sm-10">
                 <InputText id="email" class="form-control" placeholder="Email"
-                           @bind-Value="Employee.Email" />
+                           @bind-Value="EditEmployeeModel.Email" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="ConfirmEmail" class="col-sm-2 col-form-label">
+                Confirm Email
+            </label>
+            <div class="col-sm-10">
+                <InputText id="email" class="form-control" placeholder="Confirm Email"
+                           @bind-Value="EditEmployeeModel.ConfirmEmail" />
             </div>
         </div>
 
@@ -48,20 +63,64 @@ else
                 Department
             </label>
             <div class="col-sm-10">
+
                 <InputSelect id="department" @bind-Value="DepartmentId" class="form-control">
                     @foreach (var dept in Departments)
                         {
                         <option value="@dept.DepartmentId">@dept.DepartmentName</option>
                         }
                     /**/
+                    /**/
+                    /**/
+                    /**/
+                    /**/
+                    /**/
+                    /**/
                 </InputSelect>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label for="gender" class="col-sm-2 col-form-label">
+                Gender
+            </label>
+            <div class="col-sm-10">
+
+                <InputSelect id="gender" @bind-Value="EditEmployeeModel.Gender" class="form-control">
+                    @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                        {
+                        <option value="@gender">@gender</option>
+                        }
+                    /**/
+                    /**/
+                    /**/
+                    /**/
+                </InputSelect>
+
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="dateOfBirth" class="col-sm-2 col-form-label">
+                Date of birth
+            </label>
+            <div class="col-sm-10">
+
+                <InputDate id="dateOfBirth" @bind-Value="Employee.DateOfBrith" class="form-control" />
+
+
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+
     </EditForm>
 }
 
 
 @code {
+    [Inject]
+    public BlazorEmployeesManagment.Web.Services.EmployeesServices employeesServices { get; set; }
 
     [Parameter]
     public string Id { get; set; }
@@ -70,13 +129,33 @@ else
     public IEnumerable<BlazorEmployeesManagment.Web.Models.Department> Departments { get; set; }
     public string DepartmentId { get; set; }
 
+    public EditEmployeeModel EditEmployeeModel { get; set; } = new EditEmployeeModel();
+
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+    [Inject]
+    public AutoMapper.IMapper Mapper { get; set; }
+
     protected async override Task OnInitializedAsync()
     {
         Employee = await employeesService.GetById(int.Parse(Id));
         Departments = await departmentsService.GetAll();
         DepartmentId = Employee.DepartmentId.ToString();
+
+        Mapper.Map(Employee, EditEmployeeModel);
+
     }
 
-  
+    private async void HandleValidSubmit()
+    {
+        Mapper.Map(EditEmployeeModel, Employee);
+        await employeesService.Update(Employee.Id, Employee);
+
+        Navigation.NavigateTo("/EmployeesList");
+    }
+
+
+
+
 
 }

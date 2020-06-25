@@ -16,6 +16,8 @@ using Microsoft.Extensions.Hosting;
 using BlazorEmployeesManagment.Web.Areas.Identity;
 using BlazorEmployeesManagment.Web.Data;
 using BlazorEmployeesManagment.Web.Services;
+using AutoMapper;
+using BlazorEmployeesManagment.Web.Models;
 
 namespace BlazorEmployeesManagment.Web
 {
@@ -43,6 +45,8 @@ namespace BlazorEmployeesManagment.Web
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<EmployeesServices>();
             services.AddScoped<DepartmentsService>();
+
+            services.AddAutoMapper(typeof(EmployeeProfile));
 
 
         }

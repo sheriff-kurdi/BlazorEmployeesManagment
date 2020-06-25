@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace BlazorEmployeesManagment.Web.Services
@@ -40,7 +41,7 @@ namespace BlazorEmployeesManagment.Web.Services
             await db.SaveChangesAsync();
         }
 
-        public async void Update(int id, Employee employee)
+        public async Task<Employee> Update(int id, Employee employee)
         {
             var oldEmployee = await GetById(id);
             oldEmployee.FirstName = employee.FirstName;
@@ -52,6 +53,7 @@ namespace BlazorEmployeesManagment.Web.Services
             oldEmployee.PhotoPath = employee.PhotoPath;
 
             await db.SaveChangesAsync();
+            return oldEmployee;
 
 
         }
