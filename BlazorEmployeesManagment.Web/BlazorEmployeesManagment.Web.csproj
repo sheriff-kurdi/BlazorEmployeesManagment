@@ -18,4 +18,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SheriffKurdi.UsableComponents\SheriffKurdi.UsableComponents.csproj" />
+  </ItemGroup>
+
 </Project>

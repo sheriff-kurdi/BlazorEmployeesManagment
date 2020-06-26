@@ -1,14 +1,15 @@
-﻿@page "/editEmployee/{id}"
+﻿@page "/addEmployee/"
 @inject BlazorEmployeesManagment.Web.Services.EmployeesServices employeesService
 @inject BlazorEmployeesManagment.Web.Services.DepartmentsService departmentsService
 
-@if (Employee == null)
+
+
+@if (Departments == null)
 {
 
 }
 else
 {
-
     <EditForm Model="@EditEmployeeModel" OnValidSubmit=@HandleValidSubmit>
 
         <DataAnnotationsValidator />
@@ -64,19 +65,15 @@ else
             </label>
             <div class="col-sm-10">
 
-                <InputSelect id="department" @bind-Value="DepartmentId" class="form-control">
+                <CustomInputSelect id="department" @bind-Value="EditEmployeeModel.DepartmentId" class="form-control">
                     @foreach (var dept in Departments)
                         {
                         <option value="@dept.DepartmentId">@dept.DepartmentName</option>
                         }
                     /**/
                     /**/
-                    /**/
-                    /**/
-                    /**/
-                    /**/
-                    /**/
-                </InputSelect>
+
+                </CustomInputSelect>
             </div>
         </div>
 
@@ -93,8 +90,7 @@ else
                         }
                     /**/
                     /**/
-                    /**/
-                    /**/
+
                 </InputSelect>
 
             </div>
@@ -118,30 +114,29 @@ else
 }
 
 
+
 @code {
     [Inject]
     public BlazorEmployeesManagment.Web.Services.EmployeesServices employeesServices { get; set; }
+    [Inject]
+    //public BlazorEmployeesManagment.Web.Services.DepartmentsService departmentsService { get; set; }
+    
+    public NavigationManager Navigation { get; set; }
+    [Inject]
+    public AutoMapper.IMapper Mapper { get; set; }
 
-    [Parameter]
-    public string Id { get; set; }
 
-    public BlazorEmployeesManagment.Web.Models.Employee Employee { get; set; }
+    public BlazorEmployeesManagment.Web.Models.Employee Employee { get; set; } = new Employee();
     public IEnumerable<BlazorEmployeesManagment.Web.Models.Department> Departments { get; set; }
     public string DepartmentId { get; set; }
 
     public EditEmployeeModel EditEmployeeModel { get; set; } = new EditEmployeeModel();
 
-    [Inject]
-    public NavigationManager Navigation { get; set; }
-    [Inject]
-    public AutoMapper.IMapper Mapper { get; set; }
+
 
     protected async override Task OnInitializedAsync()
     {
-        Employee = await employeesService.GetById(int.Parse(Id));
         Departments = await departmentsService.GetAll();
-        DepartmentId = Employee.DepartmentId.ToString();
-
         Mapper.Map(Employee, EditEmployeeModel);
 
     }
@@ -149,7 +144,9 @@ else
     private async void HandleValidSubmit()
     {
         Mapper.Map(EditEmployeeModel, Employee);
-        await employeesService.Update(Employee.Id, Employee);
+        Employee.PhotoPath ="images/john.png";
+
+        await employeesService.Add(Employee);
 
         Navigation.NavigateTo("/EmployeesList");
     }

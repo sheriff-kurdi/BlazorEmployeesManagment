@@ -8,8 +8,8 @@ namespace BlazorEmployeesManagment.Web.Models
 {
     public class EditEmployeeModel : Employee
     {
-       //[Compare("Email")]
-       //[Required]
+       [Compare("Email")]
+       [Required]
         public string ConfirmEmail { get; set; }
     }
 }

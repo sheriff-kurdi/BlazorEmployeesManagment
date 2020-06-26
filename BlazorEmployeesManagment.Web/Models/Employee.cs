@@ -10,16 +10,16 @@ namespace BlazorEmployeesManagment.Web.Models
     {
         public int Id { get; set; }
 
-       //Required(ErrorMessage = " Firstname must be provided")]
+        [Required(ErrorMessage = " Firstname must be provided")]
         public string FirstName { get; set; }
-      //[Required]
+        [Required]
         public string LastName { get; set; }
-     // [Required]
-     // [EmailAddress]
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
-     // [Required]
+        [Required]
         public DateTime DateOfBrith { get; set; }
-     // [Required]
+        [Required]
         public Gender Gender { get; set; }
         public int DepartmentId { get; set; }
         public string PhotoPath { get; set; }

@@ -18,10 +18,11 @@ namespace BlazorEmployeesManagment.Web.Services
             this.db = db;
         }
 
-        public async void Add (Employee employee)
+        public async Task<Employee> Add (Employee employee)
         {
             await db.Employees.AddAsync(employee);
             await db.SaveChangesAsync();
+            return employee;
         }
         public async Task<IEnumerable<Employee>> GetAll()
         {
@@ -34,7 +35,7 @@ namespace BlazorEmployeesManagment.Web.Services
                 .Include(e => e.Department)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             var employee = await GetById(id);
             db.Employees.Remove(employee);

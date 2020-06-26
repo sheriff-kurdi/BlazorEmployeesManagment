@@ -28,7 +28,10 @@
 
                     <div class="col col-sm-12 col-lg-4 col-md-6">
 
-                        <BlazorEmployeesManagment.Web.Components.EmployeeCard Employee="employee" ShowFooter="ShowFooter">
+                        <BlazorEmployeesManagment.Web.Components.EmployeeCard 
+                                                                              Employee="employee" 
+                                                                              ShowFooter="ShowFooter"
+                                                                              OnEmployeeDeleted="EmployeeDeleted">
                         </BlazorEmployeesManagment.Web.Components.EmployeeCard>
 
                     </div>
@@ -50,6 +53,12 @@
     {
         Employees = await employeesService.GetAll();
     }
+
+    protected async Task EmployeeDeleted()
+    {
+        Employees = await employeesService.GetAll();
+    }
+
 
 
 

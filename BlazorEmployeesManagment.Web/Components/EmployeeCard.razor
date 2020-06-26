@@ -1,30 +1,70 @@
 ﻿
-    <link href="~/css/site.css" rel="stylesheet" />
+<link href="~/css/site.css" rel="stylesheet" />
 
-    <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
-        <div class="card-header">
-            <h4> @Employee.FirstName @Employee.LastName</h4>
-        </div>
-        <img height="200" class="card-img-top imageThumbnail" src="@Employee.PhotoPath" />
-        @if (ShowFooter)
-        {
-            <div class="card-footer text-center">
-                <a href="@($"EmployeeDetails/{Employee.Id}")" class="btn btn-primary m-1">View</a>
-
-                <a href="@($"editEmployee/{Employee.Id}")" class="btn btn-primary m-1">Edit</a>
-
-                <a href="#" class="btn btn-danger m-1">Delete</a>
-            </div>
-        }
+<div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
+    <div class="card-header">
+        <h4> @Employee.FirstName @Employee.LastName</h4>
     </div>
+    <img height="200" class="card-img-top imageThumbnail" src="@Employee.PhotoPath" />
+    @if (ShowFooter)
+    {
+        <div class="card-footer text-center">
+            <a href="@($"EmployeeDetails/{Employee.Id}")" class="btn btn-primary m-1">View</a>
+
+            <a href="@($"editEmployee/{Employee.Id}")" class="btn btn-primary m-1">Edit</a>
+
+            <button @onclick="Delete_Click" class="btn btn-danger m-1">Delete</button>
+        </div>
+    }
+</div>
+
+<Confirm 
+         ConfirmationChanged="ConfirmDelete_Click"
+         ConfirmationMessage=@($"Are you sure you want to delete {Employee.FirstName}")
+         ConfirmationTitle="Delete Employee"
+         @ref="DeleteConfirmation">
+
+</Confirm>
+
 
 
 @code {
-    [Parameter]
-    public BlazorEmployeesManagment.Web.Models.Employee  Employee { get; set; }
+
 
     [Parameter]
-    public bool ShowFooter { get; set; } 
+    public BlazorEmployeesManagment.Web.Models.Employee Employee { get; set; }
+
+    [Inject]
+    public BlazorEmployeesManagment.Web.Services.EmployeesServices employeesServices { get; set; }
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    [Parameter]
+    public bool ShowFooter { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnEmployeeDeleted { get; set; }
+ 
+
+    public Confirm DeleteConfirmation { get; set; }
+
+
+    protected async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            await employeesServices.Delete(Employee.Id);
+            await OnEmployeeDeleted.InvokeAsync(Employee.Id);
+        }
+
+    }
+
+    public void Delete_Click()
+    {
+        DeleteConfirmation.Show();
+
+    }
+
 
 
 }
